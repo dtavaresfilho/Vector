@@ -17,13 +17,13 @@ namespace Vector.Application
             this.mapperUsuario = mapperUsuario;
         }
 
-        void IApplicationServiceUsuario.Add(UsuarioDto usuarioDto)
+        public void Add(UsuarioDto usuarioDto)
         {
             var usuario = mapperUsuario.MapperDtoToEntity(usuarioDto);
             serviceUsuario.Add(usuario);            
         }
 
-        IEnumerable<UsuarioDto> IApplicationServiceUsuario.GetAll()
+        public IEnumerable<UsuarioDto> GetAll()
         {
             var usuarios = serviceUsuario.GetAll();
             

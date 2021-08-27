@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Vector.Domain.Core.Interfaces.Repositories;
+﻿using Vector.Domain.Core.Interfaces.Repositories;
 using Vector.Domain.Core.Interfaces.Services;
 using Vector.Domain.Entities;
 

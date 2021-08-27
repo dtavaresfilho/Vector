@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Vector.Application.Dtos;
 using Vector.Application.Interfaces;
 
 namespace Vector.API.Controllers
@@ -17,12 +18,6 @@ namespace Vector.API.Controllers
         {
             this.applicationServiceUsuario = applicationServiceUsuario;
             this.applicationServiceAPITeste = applicationServiceAPITeste;
-        }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
-        {
-            return Ok(applicationServiceUsuario.GetAll());
         }
 
         [HttpGet]
@@ -52,6 +47,40 @@ namespace Vector.API.Controllers
             };
 
             return Ok(listaEmails);
+        }
+
+        [HttpGet]
+        [Route("GetEmailsGroupedByCreatedDate")]
+        public ActionResult<IEnumerable<string>> GetEmailsGroupedByCreatedDate()
+        {
+            List<UsuarioDto> listaUsuarios = new List<UsuarioDto>();
+
+            if (ExisteRegistroDataHoje())
+            {
+                // Busca registros no banco de dados
+                listaUsuarios = applicationServiceUsuario.GetAll().ToList();
+            }
+            else
+            {
+                // Busca registros na API Teste 
+                listaUsuarios = applicationServiceAPITeste.GetUsuarios().ToList();
+
+                // Adiciona registros no banco de dados
+                foreach (var usuario in listaUsuarios)
+                {
+                    usuario.DataRegistro = DateTime.Now;
+                    applicationServiceUsuario.Add(usuario);
+                }
+            };
+
+            var listaUsuariosAgrupados = listaUsuarios.GroupBy(x => x.CreatedAt)
+                                                       .Select(x => new
+                                                       {
+                                                           Data = x.Key,
+                                                           Nomes = listaUsuarios.Where(u => u.CreatedAt == x.Key).Select(u => u.Name).ToList()
+                                                       }).ToList();
+
+            return Ok(listaUsuariosAgrupados);
         }
 
         private bool ExisteRegistroDataHoje()

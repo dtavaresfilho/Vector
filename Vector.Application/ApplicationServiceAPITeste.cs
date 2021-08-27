@@ -15,7 +15,7 @@ namespace Vector.Application
         {
             client = new RestClient("https://6064ac2bf09197001778660d.mockapi.io/api/test-api");
         }
-        public IEnumerable<UsuarioDto> GetUsuarios()
+        public virtual IEnumerable<UsuarioDto> GetUsuarios()
         {
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
